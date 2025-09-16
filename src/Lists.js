@@ -6,10 +6,12 @@ class Lists extends React.Component {
     let listrows = [];
     
     // Generate table rows from props.alldata
-    this.props.alldata.forEach(element => {
+    // this.props.alldata.forEach(element => {
+    this.props.alldata.forEach((element, index) => {
       listrows.push(
         <tr key={element.id}>
-          <td>{element.id}</td>
+          {/* <td>{element.id}</td> */}
+          <td>{index + 1}</td>
           <td>{element.title}</td>
           <td>{element.author}</td>
           <td>
