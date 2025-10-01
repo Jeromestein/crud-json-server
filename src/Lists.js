@@ -9,16 +9,26 @@ class Lists extends React.Component {
     // this.props.alldata.forEach(element => {
     this.props.alldata.forEach((element, index) => {
       listrows.push(
-        <tr key={element.id}>
+        <tr key={element._id}>
           {/* <td>{element.id}</td> */}
           <td>{index + 1}</td>
           <td>{element.title}</td>
           <td>{element.author}</td>
           <td>
-            <button className="btn btn-warning btn-sm">Update</button>
+            <button 
+              className="btn btn-warning btn-sm"
+              onClick={() => this.props.handleUpdate(element)}
+            >
+              Update
+            </button>
           </td>
           <td>
-            <button className="btn btn-danger btn-sm">Delete</button>
+            <button 
+              className="btn btn-danger btn-sm"
+              onClick={() => this.props.handleDelete(element._id)}
+            >
+              Delete
+            </button>
           </td>
         </tr>
       );

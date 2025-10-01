@@ -6,7 +6,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       alldata: [],
       singledata: {
         title: "",
@@ -15,8 +15,12 @@ class App extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.getLists();
+  }
+
   getLists=()=> {
-    fetch("http://localhost:5001/posts")
+    fetch("http://localhost:5001/api/books")
       .then(response => response.json())
       .then(result => 
         this.setState({ 
@@ -42,7 +46,7 @@ class App extends React.Component {
   }
 
   createList = () => {
-    fetch("http://localhost:5001/posts", {
+    fetch("http://localhost:5001/api/books", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -55,14 +59,38 @@ class App extends React.Component {
           author: ""
         }
       })
-    );
+    ).then(() => {
+      // Refresh the list after creating a new book
+      this.getLists();
+    });
+  }
+
+  updateList = (book) => {
+    this.setState({
+      singledata: {
+        title: book.title,
+        author: book.author
+      }
+    });
+  }
+
+  deleteList = (id) => {
+    fetch(`http://localhost:5001/api/books/${id}`, {
+      method: "DELETE"
+    }).then(() => {
+      this.getLists();
+    });
   }
 
   render() {
     const listTable = this.state.loading ? (
       <p>Loading...</p>
     ) : (
-      <Lists alldata={this.state.alldata} />
+      <Lists 
+        alldata={this.state.alldata} 
+        handleUpdate={this.updateList}
+        handleDelete={this.deleteList}
+      />
     );
 
     return (
