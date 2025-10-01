@@ -84,7 +84,11 @@ class App extends React.Component {
 
   render() {
     const listTable = this.state.loading ? (
-      <p>Loading...</p>
+      <div className="d-flex justify-content-center align-items-center" style={{height: '200px'}}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
     ) : (
       <Lists 
         alldata={this.state.alldata} 
@@ -94,22 +98,20 @@ class App extends React.Component {
     );
 
     return (
-      <div className="container">
-        <span className="title-bar">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={this.getLists}
-          >
-            Get Lists
-          </button>
-          <CreateList 
-            singledata={this.state.singledata} 
-            handleChange={this.handleChange}
-            handleCreate={this.createList}
-          />
-        </span>
-        {listTable}
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h1 className="mb-0">Book Management</h1>
+              <CreateList 
+                singledata={this.state.singledata} 
+                handleChange={this.handleChange}
+                handleCreate={this.createList}
+              />
+            </div>
+            {listTable}
+          </div>
+        </div>
       </div>
     );
   }
