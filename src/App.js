@@ -11,7 +11,9 @@ class App extends React.Component {
       singledata: {
         title: "",
         author: ""
-      }
+      },
+      isEditing: false,
+      editingId: null
     };
   }
 
@@ -46,22 +48,41 @@ class App extends React.Component {
   }
 
   createList = () => {
-    fetch("http://localhost:5001/api/books", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+    if (this.state.isEditing) {
+      // Update existing book
+      fetch(`http://localhost:5001/api/books/${this.state.editingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.state.singledata)
+      }).then(() => {
+        this.resetForm();
+        this.getLists();
+      }).catch(error => console.log(error));
+    } else {
+      // Create new book
+      fetch("http://localhost:5001/api/books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.state.singledata)
+      }).then(() => {
+        this.resetForm();
+        this.getLists();
+      }).catch(error => console.log(error));
+    }
+  }
+
+  resetForm = () => {
+    this.setState({
+      singledata: {
+        title: "",
+        author: ""
       },
-      body: JSON.stringify(this.state.singledata)
-    }).then(
-      this.setState({
-        singledata: {
-          title: "",
-          author: ""
-        }
-      })
-    ).then(() => {
-      // Refresh the list after creating a new book
-      this.getLists();
+      isEditing: false,
+      editingId: null
     });
   }
 
@@ -70,7 +91,9 @@ class App extends React.Component {
       singledata: {
         title: book.title,
         author: book.author
-      }
+      },
+      isEditing: true,
+      editingId: book._id
     });
   }
 
@@ -107,6 +130,8 @@ class App extends React.Component {
                 singledata={this.state.singledata} 
                 handleChange={this.handleChange}
                 handleCreate={this.createList}
+                isEditing={this.state.isEditing}
+                onCancel={this.resetForm}
               />
             </div>
             {listTable}
